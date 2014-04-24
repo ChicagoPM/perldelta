@@ -106,6 +106,18 @@ Twitter was launched in July 2006
 ---
 class: middle
 
+# Perl Releases
+
+* 5.10 - 2007-12-18
+* 5.12 - 2010-04-12
+* 5.14 - 2011-05-14
+* 5.16 - 2012-05-20
+* 5.18 - 2013-05-18
+* 5.20 - 2014
+
+---
+class: middle
+
 # OS Perl versions:
 
 * Debian Squeeze (6.0 - 2011-02-06): 5.10.1
@@ -190,9 +202,9 @@ class: middle, center
 
 ---
 class: middle
-
 # State
-
+.code-half[
+.center[Before]
 ```perl
 my $i = 0;
 sub plus_i {
@@ -201,6 +213,9 @@ sub plus_i {
 }
 plus_i() for 1..5;
 ```
+]
+.code-half[
+.center[After]
 ```perl
 use feature qw( state say );
 sub plus_x {
@@ -210,6 +225,7 @@ sub plus_x {
 }
 plus_x() for 1..5;
 ```
+]
 ---
 class: middle, center
 
@@ -313,8 +329,20 @@ sub for_when {
 ```
 
 ---
+class: middle, center
 
-* Module::CoreList - List the modules your Perl has in core
+# Module::CoreList
+## Perl core modules, features, and releases
+
+`corelist`
+
+---
+class: middle
+
+# corelist
+* `corelist Module` - Which Perl first had Module?
+* `corelist -f X` - Which feature bundle is X in?
+* `corelist -r` - Perl releases
 ---
 class: center, middle, inverse
 
@@ -322,21 +350,181 @@ class: center, middle, inverse
 ## 2010-04-12
 
 ---
+class: center, middle
 
-* The yada-yada operator (...)
-* each(), keys(), and values() on arrays
-* autodie
+# `...`
+## Yada-yada-yada
+
+No `use feature` needed
+
 ---
+class: middle
+
+# Yada-yada-yada
+```perl
+use feature qw( say );
+
+sub foo { die "Unimplemented" }
+
+eval { foo(); };
+say "foo(): $@";
+
+sub bar { ... }
+
+eval { bar(); };
+say "bar(): $@";
+```
+---
+class: center, middle
+
+# `each @array; keys @array; values @array;`
+No `use feature` needed
+---
+class: middle
+
+# Arrays are Key/Value Pairs
+```perl
+use feature qw( say );
+
+my @array = qw( foo bar baz );
+
+say 'C-style for loop';
+for ( my $i = 0; $i &lt; @array; $i++ ) {
+    say "$i: $array[$i]";
+}
+
+say 'List of indicies';
+for my $i ( 0..$#array ) {
+    say "$i: $array[$i]";
+}
+
+say 'each @array';
+while ( my ( $k, $v ) = each @array ) {
+    say "$k: $v";
+}
+
+say 'keys @array';
+say join ", ", keys @array;
+
+say 'values @array';
+say join ", ", values @array;
+```
+---
+class: center, middle
+
+# `autodie`
+## Never forget to check errors again!
+
+`use autodie`
+
+---
+class: middle
+
+# autodie
+```perl
+sub old {
+    open my $fh, '&lt;', 'DOESNOTEXIST'
+        or die "Can't open 'DOESNOTEXIST' for reading: '$!'";
+}
+
+sub new {
+    use autodie;
+    open my $fh, '&lt;', 'DOESNOTEXIST';
+}
+
+use feature qw( say );
+
+eval { old(); };
+say "old(): $@";
+
+eval { new(); };
+say "new(): $@";
+```
+---
+
 class: center, middle, inverse
 
 # Perl 5.14
 ## 2011-05-14
 ---
+class: center, middle
+# `s///r`
+## Non-destructive substitution
 
-* Non-destructive substitution (s///r)
-* More reliable exception throwing
-* HTTP::Tiny
-* JSON::PP
+No `use feature` required
+---
+class: middle
+
+# Non-destructive substitution
+```perl
+use feature qw( say );
+
+sub old_change {
+    my ( $to_change ) = @_;
+    my $changed = $to_change;
+    $changed =~ s/foo/bar/;
+    say "$to_change -&gt; $changed";
+}
+
+sub new_change {
+    my ( $to_change ) = @_;
+    my $changed = $to_change =~ s/foo/bar/r;
+    say "$to_change -&gt; $changed";
+}
+
+old_change( "foo" );
+new_change( "foo" );
+```
+---
+class: center, middle
+
+# More reliable exception throwing
+## `DESTROY` can't change `$@`
+
+---
+class: center, middle
+
+```
+Ceci n'est pas un exemple
+```
+---
+class: center, middle
+
+# `HTTP::Tiny`
+## Simple core HTTP client
+
+`use HTTP::Tiny`
+---
+class: middle
+
+# No more LWP::Simple
+
+```perl
+use feature qw( say );
+use HTTP::Tiny;
+
+my $resp = HTTP::Tiny-&gt;new-&gt;get( 'http://example.com' );
+say $resp-&gt;{content};
+```
+---
+class: center, middle
+
+# `JSON::PP`
+## Simple core JSON parser
+
+`use JSON::PP`
+---
+class: middle
+# JSON
+```perl
+use feature qw( say );
+use JSON::PP;
+
+my $json = '{ "foo": "bar", "baz": "fuzz" }';
+my $hash = JSON::PP->new->decode( $json );
+
+say "foo: " . $hash->{foo};
+```
 ---
 class: center, middle, inverse
 
@@ -344,29 +532,196 @@ class: center, middle, inverse
 ## 2012-05-26
 
 ---
+class: center, middle
 
-* Reference to the current running sub (__SUB__)
+# `__SUB__`
+## Reference to the current running sub
 
+No `use feature` needed
+---
+class: middle
+# Recurse Without Names
+```perl
+use feature qw( say );
+
+my $old; $old = sub {
+    my ( $i ) = @_;
+    return $i if $i &lt;= 1;
+    return $old-&gt;( $i - 1 ) + $old-&gt;( $i - 2 );
+};
+# Hello memory leak!
+
+my $new = sub {
+    my ( $i ) = @_;
+    return $i if $i &lt;= 1;
+    return __SUB__-&gt;( $i - 1 ) + __SUB__-&gt;( $i - 2 );
+};
+
+say $old-&gt;( 3 );
+say $new-&gt;( 3 );
+```
 ---
 class: center, middle, inverse
 
 # Perl 5.18
 ## 2013-05-18
 
-* Lexical subroutines (my sub, our sub, state sub)
-
 ---
+class: center, middle
+
+# `my sub`, `our sub`, `state sub`
+## Lexical subroutines
+
+`use feature qw( lexical_subs )`
+---
+class: middle
+# My subs, Your subs
+```perl
+use feature qw( say lexical_subs );
+
+sub old {
+    say "old()";
+    my $inner = sub {
+        say "inner()";
+    };
+    $inner-&gt;();
+}
+
+sub new {
+    say "new()";
+    my sub inner {
+        say "inner()";
+    }
+    inner();
+}
+
+old();
+new();
+```
+---
+class: middle
+# Hide your subs
+```perl
+use feature qw( say lexical_subs );
+
+sub new {
+    say "new()";
+    my sub inner {
+        say "inner()";
+    }
+    inner();
+}
+
+sub hide {
+    my sub new {
+        say "hidden new()";
+    }
+    new();
+}
+
+new();
+hide();
+```
+---
+
 class: center, middle, inverse
 
 # Perl 5.20
 ## Coming in 2014
 
 ---
+class: center, middle
 
-* Hash-based slices (%hash{...} and %array[...])
-* EXP: Postfix dereference operators ($ref->%*)
-* EXP: Subroutine signatures (sub mysub( $foo, $bar, @baz ) { ... })
-* IO::Socket::IP
+# `%hash{...}`, `%array[...]`
+## Hash-based slices
+
+No `use feature` needed
+---
+class: middle
+
+# Hash/Array in, Hash out
+```perl
+use feature qw( say );
+
+my %hash = ( foo =&gt; 0, bar =&gt; 1 );
+my @array = qw( foo bar );
+
+my %old_part_hash = map { $_ =&gt; $hash{$_} }
+                    grep { $_ eq 'foo' }
+                    keys %hash;
+
+my %part_hash = %hash{"foo"};
+say "part_hash{foo} -&gt; $part_hash{foo}";
+
+my %part_array = %array[0];
+say "part_array{0} -&gt; $part_array{0}";
+```
+---
+class: center, middle
+
+# `$hash_ref-&gt;%*`, `$ary_ref-&gt;@*`
+## Postfix dereference operators
+
+---
+class: middle
+
+# Read From Left to Right
+```perl
+my $href = {
+    foo =&gt; "bar",
+};
+my $aref = [ "foo", "bar" ];
+
+say %{ $href };
+say $href-&gt;%*;
+
+say @{ $aref };
+say $aref-&gt;@*;
+```
+---
+class: middle
+
+# Deep Diving Dereference
+```perl
+say %{ $data-&gt;{results}[0]{symbols} };
+```
+```perl
+say $data-&gt;{results}[0]{symbols}-&gt;%*
+```
+---
+class: center, middle
+
+# `sub foo( $bar, @baz );`
+## Subroutine signatures
+
+`use feature qw( signatures );`
+---
+class: middle
+# Unpack @_ automatically
+```perl
+use feature qw( say signatures );
+
+sub old {
+    my ( $bar, @baz ) = @_;
+    die "First argument missing" unless $bar;
+    say "$bar -&gt; @baz";
+}
+
+sub new( $bar, @baz ) {
+    say "$bar -&gt; @baz";
+}
+
+old( "foo" );
+eval { old() };
+say "old(): $@";
+
+new( "foo" );
+eval { new() };
+say "new(): $@";
+```
+---
+class: center, middle, inverse
+# Questions!
     </textarea>
     <div id="slideshow"></div>
   </body>
