@@ -476,6 +476,28 @@ old_change( "foo" );
 new_change( "foo" );
 ```
 ---
+class: middle
+
+# Best used in map()
+```perl
+use feature qw( say );
+
+my @array = qw( fooo baro bazo );
+
+sub old {
+    say for map { my $x = $_; $x =~ s/o/0/; $x } @_;
+}
+
+sub new {
+    say for map { s/o/0/r } @_;
+}
+
+say "old()";
+old( @array );
+say "new()";
+new( @array );
+```
+---
 class: center, middle
 
 # More reliable exception throwing
