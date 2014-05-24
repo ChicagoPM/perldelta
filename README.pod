@@ -1,0 +1,132 @@
+
+=head1 NAME
+
+perldelta - The Changes in Perl from 5.10 to 5.20
+
+=head1 VERSION
+
+1.0 (2014-04-26)
+
+=head1 DESCRIPTION
+
+This talk is about the important changes in Perl since 5.8.
+
+These are the things that are generally useful and remained useful to the
+modern Perl.
+
+=head1 RUNNING TIME
+
+Approximately 50 minutes.
+
+=head1 TOPICS COVERED
+
+=over 4
+
+=item *
+
+If you upgrade to 5.10 you get:
+
+=over
+
+=item say
+
+=item state
+
+=item defined-or (//)
+
+=item Switch (given/when)
+
+=item Module::CoreList – List the modules your Perl has in core
+
+=back
+
+=item *
+
+If you upgrade to 5.12 you get:
+
+=over
+
+=item The yada-yada operator (…)
+
+=item each(), keys(), and values() on arrays
+
+=item autodie
+
+=back
+
+=item *
+
+If you upgrade to 5.14 you get:
+
+=over
+
+=item Non-destructive substitution (s///r)
+
+=item More reliable exception throwing
+
+=item HTTP::Tiny
+
+=item JSON::PP
+
+=back
+
+=item *
+
+If you upgrade to 5.16 you get:
+
+=over
+
+=item Reference to the current running sub (__SUB__)
+
+=back
+
+=item *
+
+If you upgrade to 5.18 you get:
+
+=over
+
+=item Lexical subroutines (my sub, our sub, state sub)
+
+=back
+
+=item *
+
+Awaiting us in 5.20:
+
+=over
+
+=item Hash-based slices (%hash{…} and %array[…])
+
+=item Postfix dereference operators ($ref->%*)
+
+=item Subroutine signatures (sub mysub( $foo, $bar, @baz ) { … })
+
+=item IO::Socket::IP
+
+=back
+
+=back
+
+=head1 PREREQUISITES
+
+=over 4
+
+=item Basic knowledge of Perl
+
+One of the community-approved beginner books will work splendidly.
+
+=back
+
+=head1 AUTHORS
+
+Doug Bell <preaction@cpan.org>
+
+=head1 COPYRIGHT
+
+(c) 2014 Doug Bell
+
+=head1 LICENSE
+
+This presentation and associated code is licensed under the same terms as Perl
+itself (Artistic License 1.0 or GPL 1.0 at your discretion).
