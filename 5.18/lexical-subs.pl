@@ -18,12 +18,17 @@ sub new {
 }
 
 sub hide {
-    state sub new {
+    my sub new {
         say "hidden new()";
+        our sub new;
+        new();
     }
     new();
 }
 
+say '-- old()';
 old();
+say '-- new()';
 new();
+say '-- hide()';
 hide();
