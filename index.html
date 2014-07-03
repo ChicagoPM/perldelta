@@ -331,6 +331,97 @@ sub for_when {
 ---
 class: middle, center
 
+# Regex Named Groups
+## Less magic, more descriptive
+`(?&lt;name&gt;...)` `\g{name}` `$+{name}`
+---
+class: middle
+
+# Regex Named Groups
+
+.code-half[
+```perl
+use feature qw( say );
+my $in = "foo: bar\nbaz: biz";
+
+my $old_parse = qr{
+    ([^:\s]+)
+    :
+    \s*
+    ([^\n]+)
+}x;
+
+while ( $in =~ /$old_parse/g ) {
+    say "Key: $1";
+    say "Value: $2";
+}
+```
+]
+.code-half[
+```perl
+use feature qw( say );
+my $in = "foo: bar\nbaz: biz";
+
+my $new_parse = qr{
+    (?&lt;key&gt;[^:\s]+)
+    :
+    \s*
+    (?&lt;value&gt;[^\n]+)
+}x;
+
+while ( $in =~ /$new_parse/g ) {
+    say "Key: $+{key}";
+    say "Value: $+{value}";
+}
+```
+]
+---
+class: middle, center
+
+# Recursive Regex
+## Turn regex into parsers
+
+`(?1)` `(?-1)` `(?&amp;name)`
+
+---
+class: middle
+
+# Recursive Regex
+
+.code-half[
+```perl
+
+use feature qw( say );
+
+my $in = "[ [ 1 2 ] 3 [ 4 5 ] ]";
+
+# INT -&gt; \d+
+# LIST -&gt; "[" (LIST|INT)* "]"
+my $parse = qr(
+    (?&lt;LIST&gt;
+        \s* \[ \s*
+        (?:
+            (?&amp;LIST)
+            |
+            (?&lt;INT&gt;\d+)
+            \s*
+        )*
+        \s* \] \s*
+    )*
+)x;
+```
+]
+.code-half[
+```perl
+$in =~ $parse;
+use Data::Dumper;
+say Dumper \%+;
+```
+]
+
+---
+class: middle, center
+
 # Module::CoreList
 ## Perl core modules, features, and releases
 
