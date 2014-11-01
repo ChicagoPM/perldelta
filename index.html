@@ -595,10 +595,37 @@ class: center, middle
 ## `DESTROY` can't change `$@`
 
 ---
-class: center, middle
+class: middle
 
+# 2 Ways to Die
+```perl
+use warnings;
+use feature qw( say );
+
+package Foo;
+sub new { bless {}, "Foo" }
+sub DESTROY { eval { die "It's clobberin' time!" } }
+
+package main;
+eval {
+    my $foo = Foo-&gt;new;
+    die "Avengers Assemble!";
+};
+say $@;
 ```
-Ceci n'est pas un exemple
+---
+class: middle
+
+# Which One Will It Be?
+```
+$ perlbrew exec --with perl-5.12.5,perl-5.14.4 perl 5.14/eval-destroy.pl
+perl-5.12.5
+==========
+It's clobberin' time! at 5.14/eval-destroy.pl line 6.
+
+perl-5.14.4
+==========
+Avengers Assemble! at 5.14/eval-destroy.pl line 12.
 ```
 ---
 class: center, middle
