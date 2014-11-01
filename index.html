@@ -802,6 +802,16 @@ say %{ $data-&gt;{results}[0]{symbols} };
 say $data-&gt;{results}[0]{symbols}-&gt;%*
 ```
 ---
+class: middle
+
+# Postfix Slicing
+```perl
+say @{ $data-&gt;{results} }[0..3]
+```
+```perl
+say $data-&gt;{results}->@[0..3];
+```
+---
 class: center, middle
 
 # `sub foo( $bar, @baz );`
