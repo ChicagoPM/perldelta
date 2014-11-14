@@ -1,5 +1,5 @@
 
-use feature qw( say );
+use feature qw( say current_sub );
 
 my $old; $old = sub {
     my ( $i ) = @_;
