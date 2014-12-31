@@ -4,7 +4,7 @@ use feature qw( say );
 my @array = qw( fooo baro bazo );
 
 sub old {
-    say for map { my $x = $_; $x =~ s/o/0/; $x } qw( foo bar baz );
+    say for map { my $x = $_; $x =~ s/o/0/; $x } @_;
 }
 
 sub new {
